@@ -9,21 +9,11 @@ use App\Models\User;
 
 class UserController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function signUp()
     {
         return view('user.register');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function signIn()
     {
         return view('user.login');
@@ -81,6 +71,6 @@ class UserController extends Controller
             'user_name' => $user->name,
         ]);
 
-        return redirect()->route('blog.index');
+        return redirect()->route('top');
     }
 }
