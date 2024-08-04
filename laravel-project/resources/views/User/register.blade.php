@@ -9,15 +9,16 @@
   <main class="user">
     <div class="user-inner">
       <h1 class="title">会員登録</h1>
+      
       <!-- エラーメッセージ -->
-      @if ($errors->any())
-      <div class="error-messages">
-        <ul>
-          @foreach ($errors->all() as $error)
-            <li>{{ $error }}</li>
-          @endforeach
-        </ul>
-      </div>
+      @if ($errors->has('registration_error'))
+        <div class="error-messages">
+          <ul>
+            @foreach ($errors->get('registration_error') as $error)
+              <li>{{ $error }}</li>
+            @endforeach
+          </ul>
+        </div>
       @endif
 
       <!-- 会員登録フォーム -->

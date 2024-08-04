@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 use App\UseCase\User\SignUp\RegisterInput;
 use App\UseCase\User\SignUp\RegisterInteractor;
+use App\UseCase\User\SignIn\LoginInput;
+use App\UseCase\User\SignIn\LoginInteractor;
 
 class UserController extends Controller
 {
@@ -45,15 +47,21 @@ class UserController extends Controller
             $request->input('password'),
         );
 
-        $interactor = new RegisterInteractor();
-        $interactor->handle($input);
-
-        return redirect()->route('login');
+        try {
+            $interactor = new RegisterInteractor();
+            $interactor->handle($input);
+    
+            return redirect()->route('login');
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors([
+                'registration_error' => $e->getMessage()
+            ])->withInput();
+        }
     }
 
     public function login(Request $request)
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'email' => 'required|email',
             'password' => 'required'
         ], [
@@ -62,23 +70,29 @@ class UserController extends Controller
             'password.required' => 'パスワードを入力してください'
         ]);
 
-        // 1. ユーザー情報の取得
-        $userInfo = $request->only('email', 'password');
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
 
-        // 2. ユーザー認証の試行
-        if (!Auth::attempt($userInfo)) {
-            return redirect()->back()->withErrors([
-                'login_error' => 'メールアドレスまたはパスワードが違います'
+        $input = new LoginInput(
+            $request->input('email'),
+            $request->input('password')
+        );
+
+        try {
+            $interactor = new LoginInteractor();
+            $user = $interactor->handle($input);
+    
+            session([
+                'user_id' => $user->id,
+                'user_name' => $user->name,
             ]);
-        } 
-         // 認証されているユーザーの情報を取得
-        $user = Auth::user();
 
-        session([
-            'user_id' => $user->id,
-            'user_name' => $user->name,
-        ]);
-
-        return redirect()->route('top');
+            return redirect()->route('top');
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors([
+                'login_error' => $e->getMessage()
+            ]);
+        }
     }
 }
