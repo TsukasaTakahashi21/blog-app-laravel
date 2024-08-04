@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Validator;
+use Illuminate\Support\Facades\Validator;
 use App\Models\User;
+use App\UseCase\User\SignIn\RegisterInput;
+use App\UseCase\User\SignIn\RegisterInteractor;
 
 class UserController extends Controller
 {
@@ -21,10 +23,10 @@ class UserController extends Controller
 
     public function register(Request $request)
     {
-        $validated = $request->validate([
+        $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|Unique:users,email',
-            'password' => 'required|string|min:4|confirmed',
+            'email' => 'required|string|email|max:255|unique:users,email',
+            'password' => 'required|string|min:6|confirmed'
         ], [
             'name.required' => 'UserNameの入力がありません',
             'email.required' => 'Emailの入力がありません',
@@ -33,12 +35,18 @@ class UserController extends Controller
             'password.confirmed' => 'パスワードが一致しません',
         ]);
 
-        $user = User::create([
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-            // bcrypt でパスワードをハッシュ化
-            'password' => bcrypt($validated['password'])
-        ]);
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        $input = new RegisterInput(
+            $request->input('name'),
+            $request->input('email'),
+            $request->input('password'),
+        );
+
+        $interactor = new RegisterInteractor();
+        $interactor->handle($input);
 
         return redirect()->route('login');
     }

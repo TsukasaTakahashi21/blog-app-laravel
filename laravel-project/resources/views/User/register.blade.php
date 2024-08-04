@@ -24,13 +24,13 @@
       <form action="{{ route('register') }}" method="post" class="form">
         @csrf 
         <!-- UserName -->
-        <input type="text" class="input" name="name" id="name" placeholder="UserName" Value=""><br>
+        <input type="text" class="input" name="name" id="name" placeholder="UserName" Value="{{ old('name')}}"><br>
         <!-- Email -->
-        <input type="email" class="input" name="email" id="email" placeholder="Email" Value=""><br>
+        <input type="email" class="input" name="email" id="email" placeholder="Email" Value="{{ old('email') }}"><br>
         <!-- パスワード -->
-        <input type="password" class="input" name="password" id="password" placeholder="Password" value=""><br>
+        <input type="password" class="input" name="password" id="password" placeholder="Password"><br>
         <!-- パスワード確認 -->
-        <input type="password" class="input" name="password_confirmation" id="password_confirmation" placeholder="Password確認" value=""><br>
+        <input type="password" class="input" name="password_confirmation" id="password_confirmation" placeholder="Password確認"><br>
         <button type="submit" class="button">アカウント作成</button>
       </form>
       <a href="{{ route('signIn') }}" class="user-link">ログイン画面へ</a>
