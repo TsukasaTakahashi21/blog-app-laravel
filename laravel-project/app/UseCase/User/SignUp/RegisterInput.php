@@ -1,5 +1,5 @@
 <?php
-namespace App\UseCase\User\SignIn;
+namespace App\UseCase\User\SignUp;
 
 class RegisterInput
 {

@@ -6,8 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
-use App\UseCase\User\SignIn\RegisterInput;
-use App\UseCase\User\SignIn\RegisterInteractor;
+use App\UseCase\User\SignUp\RegisterInput;
+use App\UseCase\User\SignUp\RegisterInteractor;
 
 class UserController extends Controller
 {

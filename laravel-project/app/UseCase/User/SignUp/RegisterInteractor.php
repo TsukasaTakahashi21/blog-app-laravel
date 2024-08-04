@@ -1,8 +1,8 @@
 <?php
-namespace App\UseCase\User\SignIn;
+namespace App\UseCase\User\SignUp;
 
 use App\Models\User;
-use App\UseCase\User\SignIn\RegisterInput;
+use App\UseCase\User\SignUp\RegisterInput;
 use Illuminate\Support\Facades\Hash;
 
 class RegisterInteractor
