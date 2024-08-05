@@ -7,11 +7,12 @@ use Illuminate\Database\QueryException;
 
 class CreateBlogInteractor 
 {
-  public function handle(CreateBlogInput $input) {
+  public function handle(CreateBlogInput $input) 
+  {
     try {
       $blog = new Blog();
       $blog->title = $input->getTitle();
-      $blog->content = $input->getContent();
+      $blog->content = $input->getContents();
       $blog->save();
     } catch (QueryException $e) {
         throw new \Exception('ブログ作成に失敗しました。');

@@ -23,7 +23,7 @@
       @csrf
       <div class="form-group">
         <label for="title">タイトル</label>
-        <input type="text" id="title" name="title" class="form-input" value="{{ old('title') }}>
+        <input type="text" id="title" name="title" class="form-input" value="{{ old('title') }}">
       </div>
       <div class="form-group">
         <label for="contents">内容</label>

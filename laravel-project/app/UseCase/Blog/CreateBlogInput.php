@@ -17,7 +17,7 @@ class CreateBlogInput
     return $this->title;
   }
 
-  public function getContent(): string
+  public function getContents(): string
   {
     return $this->contents;
   }
