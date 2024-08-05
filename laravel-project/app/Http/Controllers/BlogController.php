@@ -5,6 +5,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\blog;
 use App\Models\Comment;
+use App\UseCase\Blog\CreateBlogInput;
+use App\UseCase\Blog\CreateBlogInteractor;
 
 class BlogController extends Controller
 {
@@ -60,12 +62,21 @@ class BlogController extends Controller
             'contents.required' => '内容を入力してください'
         ]);
 
-        $blog = new blog();
-        $blog->title = $validated['title'];
-        $blog->content = $validated['contents'];
-        $blog->save();
+        $input = new CreateBlogInput(
+            $validated['title'],
+            $validated['contents']
+        );
 
-        return redirect()->route('mypage');
+        try {
+            $interactor = new CreateBlogInteractor();
+            $interactor->handle($input);
+
+            return redirect()->route('mypage');
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors([
+                'create_blog_error' => $e->getMessage()
+            ])->withInput();
+        }
     }
 
     public function showDetail($id)
