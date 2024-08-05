@@ -9,32 +9,20 @@ use App\UseCase\Blog\CreateBlogInput;
 use App\UseCase\Blog\CreateBlogInteractor;
 use App\UseCase\Blog\EditBlogInput;
 use App\UseCase\Blog\EditBlogInteractor;
+use App\UseCase\Blog\ListBlogsInput;
+use App\UseCase\Blog\ListBlogsInteractor;
 
 class BlogController extends Controller
 {
-    public function top(Request $request)
+    public function top(Request $request, ListBlogsInteractor $listBlogsInteractor)
     {
-        $query = Blog::query();
+        $input = new ListBlogsInput(
+            $request->query('keyword'),
+            $request->query('sort')
+        );
 
-        // キーワード検索
-        if ($keyword = $request->query('keyword')) {
-            $query->where('title', 'like', '%'.$keyword.'%')
-                    ->orWhere('content', 'like', '%'.$keyword.'%');
-        }
+        $blogs = $listBlogsInteractor->handle($input);
 
-        // ソート順
-        if ($sort = $request->query('sort')) {
-            if ($sort === 'newest') {
-                $query->orderBy('created_at', 'desc');
-            } elseif ($sort === 'oldest') {
-                $query->orderBy('created_at', 'asc');
-            } else {
-                // デフォルト
-                $query->orderBy('created_at', 'desc');
-            }
-        }
-
-        $blogs = $query->get();
         return view ('blog.top', compact('blogs'));
     }
 
