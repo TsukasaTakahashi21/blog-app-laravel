@@ -13,6 +13,8 @@ use App\UseCase\Blog\ListBlogsInput;
 use App\UseCase\Blog\ListBlogsInteractor;
 use App\UseCase\Blog\ListBlogDetailInput;
 use App\UseCase\Blog\ListBlogDetailInteractor;
+use App\UseCase\Blog\MyArticleDetailInput;
+use App\UseCase\Blog\MyArticleDetailInteractor;
 
 class BlogController extends Controller
 {
@@ -20,17 +22,20 @@ class BlogController extends Controller
     private EditBlogInteractor $editBlogInteractor;
     private ListBlogsInteractor $listBlogsInteractor;
     private ListBlogDetailInteractor $listBlogDetailInteractor;
+    private MyArticleDetailInteractor $myArticleDetailInteractor;
 
     public function __construct(
         CreateBlogInteractor $createBlogInteractor,
         EditBlogInteractor $editBlogInteractor,
         ListBlogsInteractor $listBlogsInteractor,
-        ListBlogDetailInteractor $listBlogDetailInteractor
+        ListBlogDetailInteractor $listBlogDetailInteractor,
+        MyArticleDetailInteractor $myArticleDetailInteractor
     ) {
         $this->createBlogInteractor = $createBlogInteractor;
         $this->editBlogInteractor = $editBlogInteractor;
         $this->listBlogsInteractor = $listBlogsInteractor;
         $this->listBlogDetailInteractor = $listBlogDetailInteractor;
+        $this->myArticleDetailInteractor = $myArticleDetailInteractor;
     }
 
 
@@ -50,12 +55,6 @@ class BlogController extends Controller
     public function header()
     {
         return view('blog.header');
-    }
-
-    public function mypage()
-    {
-        $blogs = Blog::all();
-        return view('blog.mypage', compact('blogs'));
     }
 
     // ブログ作成
@@ -127,12 +126,23 @@ class BlogController extends Controller
     }
 
     // マイページ詳細
+    public function mypage()
+    {
+        $blogs = Blog::all();
+        return view('blog.mypage', compact('blogs'));
+    }
+
     public function showMyarticleDetail($id)
     {
-        $blog = Blog::findOrFail($id);
+        $input = new MyArticleDetailInput($id);
+        $result = $this->myArticleDetailInteractor->handle($input);
+
+        $blog =$result['blog'];
+
         return view('blog.myarticleDetail', compact('blog'));
     }
 
+    // ログアウト処理
     public function logout()
     {
         Auth::logout();
@@ -140,6 +150,7 @@ class BlogController extends Controller
         return redirect()->route('signUp');
     }
 
+    // ブログ編集
     public function edit($id)
     {
         $blog = Blog::findOrFail($id);
@@ -165,6 +176,7 @@ class BlogController extends Controller
         }
     }
 
+    // ブログ削除
     public function destroy($id)
     {
         $blog = Blog::findOrFail($id);
