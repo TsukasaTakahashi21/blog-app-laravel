@@ -26,8 +26,8 @@
         <input type="text" id="title" name="title" class="form-input" value="{{ old('title') }}">
       </div>
       <div class="form-group">
-        <label for="contents">内容</label>
-        <textarea name="contents" id="contents" class="form-textarea">{{ old('contents') }}</textarea>
+        <label for="content">内容</label>
+        <textarea name="content" id="content" class="form-textarea">{{ old('content') }}</textarea>
       </div>
       <div class="button">
         <button type="submit" class="submit-button">新規作成</button>

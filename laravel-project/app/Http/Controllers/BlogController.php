@@ -58,15 +58,15 @@ class BlogController extends Controller
     {
         $validated = $request->validate([
             'title' => 'required|max:255',
-            'contents' => 'required'
+            'content' => 'required'
         ], [
             'title.required' => 'タイトルを入力してください',
-            'contents.required' => '内容を入力してください'
+            'content.required' => '内容を入力してください'
         ]);
 
         $input = new CreateBlogInput(
             $validated['title'],
-            $validated['contents']
+            $validated['content']
         );
 
         try {
@@ -139,7 +139,7 @@ class BlogController extends Controller
             'content' => 'required|string',
         ]);
 
-        $input = new EditBlogInput($id, $validated['title'], $validated['contents']);
+        $input = new EditBlogInput($id, $validated['title'], $validated['content']);
 
         try {
             $interactor = new EditBlogInteractor();

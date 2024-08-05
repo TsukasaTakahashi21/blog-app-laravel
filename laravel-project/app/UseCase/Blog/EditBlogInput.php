@@ -5,13 +5,13 @@ class EditBlogInput
 {
   private int $id;
   private string $title;
-  private string $contents;
+  private string $content;
 
-  public function __construct(int $id, string $title, string $contents)
+  public function __construct(int $id, string $title, string $content)
   {
     $this->id = $id;
     $this->title = $title;
-    $this->contents = $contents;
+    $this->content = $content;
   }
 
   public function getId(): int 
@@ -24,8 +24,8 @@ class EditBlogInput
     return $this->title;
   }
 
-  public function getContents(): string
+  public function getContent(): string
   {
-    return $this->contents;
+    return $this->content;
   }
 }

@@ -12,7 +12,7 @@ class EditBlogInteractor
     try {
       $blog = Blog::findOrFail($input->getId());
       $blog->title = $input->getTitle();
-      $blog->contents = $input->getContents();
+      $blog->content = $input->getContent();
       $blog->save();
     }  catch(QueryException $e) {
       throw new \Exception('ブログの編集に失敗しました。');

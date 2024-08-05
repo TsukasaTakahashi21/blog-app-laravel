@@ -4,12 +4,12 @@ namespace App\UseCase\Blog;
 class CreateBlogInput
 {
   private string $title;
-  private string $contents;
+  private string $content;
 
-  public function __construct(string $title, string $contents)
+  public function __construct(string $title, string $content)
   {
     $this->title = $title;
-    $this->contents = $contents;
+    $this->content = $content;
   }
 
   public function getTitle(): string
@@ -17,8 +17,8 @@ class CreateBlogInput
     return $this->title;
   }
 
-  public function getContents(): string
+  public function getContent(): string
   {
-    return $this->contents;
+    return $this->content;
   }
 }

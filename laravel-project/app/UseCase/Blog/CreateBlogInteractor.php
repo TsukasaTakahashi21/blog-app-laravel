@@ -12,7 +12,7 @@ class CreateBlogInteractor
     try {
       $blog = new Blog();
       $blog->title = $input->getTitle();
-      $blog->content = $input->getContents();
+      $blog->content = $input->getContent();
       $blog->save();
     } catch (QueryException $e) {
         throw new \Exception('ブログ作成に失敗しました。');

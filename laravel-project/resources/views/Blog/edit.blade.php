@@ -19,7 +19,7 @@
     </div>
     @endif
 
-    <form action="{{ route('update', $blog->id) }}" method="post" class="edit-form>
+    <form action="{{ route('update', $blog->id) }}" method="post" class="edit-form">
       @csrf
       @method('put')
       <div class="edit-field">
