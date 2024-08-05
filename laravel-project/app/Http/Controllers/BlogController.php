@@ -7,6 +7,8 @@ use App\Models\blog;
 use App\Models\Comment;
 use App\UseCase\Blog\CreateBlogInput;
 use App\UseCase\Blog\CreateBlogInteractor;
+use App\UseCase\Blog\EditBlogInput;
+use App\UseCase\Blog\EditBlogInteractor;
 
 class BlogController extends Controller
 {
@@ -137,12 +139,18 @@ class BlogController extends Controller
             'content' => 'required|string',
         ]);
 
-        $blog = Blog::findOrFail($id);
-        $blog->title = $validated['title'];
-        $blog->content = $validated['content'];
-        $blog->save();
+        $input = new EditBlogInput($id, $validated['title'], $validated['contents']);
 
-        return redirect()->route('mypage');
+        try {
+            $interactor = new EditBlogInteractor();
+            $interactor->handle($input);
+
+            return redirect()->route('mypage');
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors([
+                'edit_blog_error' => $e->getMessage()
+            ])->withInput();
+        }
     }
 
     public function destroy($id)
