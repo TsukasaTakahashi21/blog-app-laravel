@@ -15,6 +15,8 @@ use App\UseCase\Blog\ListBlogDetailInput;
 use App\UseCase\Blog\ListBlogDetailInteractor;
 use App\UseCase\Blog\MyArticleDetailInput;
 use App\UseCase\Blog\MyArticleDetailInteractor;
+use App\UseCase\Blog\DeleteBlogInput;
+use App\UseCase\Blog\DeleteBlogInteractor;
 
 class BlogController extends Controller
 {
@@ -23,19 +25,22 @@ class BlogController extends Controller
     private ListBlogsInteractor $listBlogsInteractor;
     private ListBlogDetailInteractor $listBlogDetailInteractor;
     private MyArticleDetailInteractor $myArticleDetailInteractor;
+    private DeleteBlogInteractor $deleteBlogInteractor;
 
     public function __construct(
         CreateBlogInteractor $createBlogInteractor,
         EditBlogInteractor $editBlogInteractor,
         ListBlogsInteractor $listBlogsInteractor,
         ListBlogDetailInteractor $listBlogDetailInteractor,
-        MyArticleDetailInteractor $myArticleDetailInteractor
+        MyArticleDetailInteractor $myArticleDetailInteractor,
+        DeleteBlogInteractor $deleteBlogInteractor
     ) {
         $this->createBlogInteractor = $createBlogInteractor;
         $this->editBlogInteractor = $editBlogInteractor;
         $this->listBlogsInteractor = $listBlogsInteractor;
         $this->listBlogDetailInteractor = $listBlogDetailInteractor;
         $this->myArticleDetailInteractor = $myArticleDetailInteractor;
+        $this->deleteBlogInteractor = $deleteBlogInteractor;
     }
 
 
@@ -179,8 +184,9 @@ class BlogController extends Controller
     // ブログ削除
     public function destroy($id)
     {
-        $blog = Blog::findOrFail($id);
-        $blog->delete();
+        $input = new DeleteBlogInput($id);
+        $this->deleteBlogInteractor->handle($input);
+        
         return redirect()->route('mypage');
     }
 }
