@@ -17,6 +17,8 @@ use App\UseCase\Blog\MyArticleDetailInput;
 use App\UseCase\Blog\MyArticleDetailInteractor;
 use App\UseCase\Blog\DeleteBlogInput;
 use App\UseCase\Blog\DeleteBlogInteractor;
+use App\UseCase\Blog\CreateCommentInput;
+use App\UseCase\Blog\CreateCommentInteractor;
 
 class BlogController extends Controller
 {
@@ -26,6 +28,7 @@ class BlogController extends Controller
     private ListBlogDetailInteractor $listBlogDetailInteractor;
     private MyArticleDetailInteractor $myArticleDetailInteractor;
     private DeleteBlogInteractor $deleteBlogInteractor;
+    private CreateCommentInteractor $createCommentInteractor;
 
     public function __construct(
         CreateBlogInteractor $createBlogInteractor,
@@ -33,7 +36,8 @@ class BlogController extends Controller
         ListBlogsInteractor $listBlogsInteractor,
         ListBlogDetailInteractor $listBlogDetailInteractor,
         MyArticleDetailInteractor $myArticleDetailInteractor,
-        DeleteBlogInteractor $deleteBlogInteractor
+        DeleteBlogInteractor $deleteBlogInteractor,
+        CreateCommentInteractor $createCommentInteractor
     ) {
         $this->createBlogInteractor = $createBlogInteractor;
         $this->editBlogInteractor = $editBlogInteractor;
@@ -41,6 +45,7 @@ class BlogController extends Controller
         $this->listBlogDetailInteractor = $listBlogDetailInteractor;
         $this->myArticleDetailInteractor = $myArticleDetailInteractor;
         $this->deleteBlogInteractor = $deleteBlogInteractor;
+        $this->createCommentInteractor = $createCommentInteractor;
     }
 
 
@@ -120,14 +125,21 @@ class BlogController extends Controller
             'comments.required' => 'コメントを入力してください',
         ]);
 
-        Comment::create([
-            'user_id' => Auth()->id(), 
-            'blog_id' => $id,
-            'commenter_name' => $validated['commenter_name'],
-            'comments' => $validated['comments'],
-        ]);
+        $input = new CreateCommentInput(
+            Auth::id(),
+            $id,
+            $validated['commenter_name'],
+            $validated['comments'],
+        );
 
-        return redirect()->route('detail', ['id' => $id]);
+        try {
+            $this->createCommentInteractor->handle($input);
+            return redirect()->route('detail', ['id' => $id]);
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors([
+                'create_comment_error' => $e->getMessage()
+            ])->withInput();
+        }
     }
 
     // マイページ詳細
@@ -186,7 +198,7 @@ class BlogController extends Controller
     {
         $input = new DeleteBlogInput($id);
         $this->deleteBlogInteractor->handle($input);
-        
+
         return redirect()->route('mypage');
     }
 }
