@@ -1,0 +1,53 @@
+
+.user {
+  background-color: #fff;
+  height: 100vh; 
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.user-inner {
+  width: 100%;
+  max-width: 400px;
+  margin: auto;
+}
+
+/* タイトル */
+.title {
+  font-size: 24px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* フォームと入力フィールド */
+.form {
+  display: flex;
+  flex-direction: column;
+}
+
+.input {
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.input:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+/* リンク */
+.user-link {
+  display: block;
+  margin-top: 20px;
+  text-align: center;
+  color: #007bff;
+  text-decoration: none;
+}
+
+.user-link:hover {
+  text-decoration: underline;
+}

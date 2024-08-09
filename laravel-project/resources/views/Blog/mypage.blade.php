@@ -4,6 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>マイページ</title>
+  <link rel="stylesheet" href="{{ asset('css/common.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/mypage.css') }}">
 </head>
 <body>
   @include('blog.header')
@@ -20,7 +23,7 @@
       <div class="blog-item">
         <h2 class="blog-item-title">{{ $blog-> title }}</h2>
         <p class="blog-item-date">{{ $blog-> created_at }}</p>
-        <p class="blog-item-content">{{ $blog-> content }}</p>
+        <p class="blog-item-content">{{ Str::limit($blog-> content, 15) }}</p>
         <a href="{{ route('myarticleDetail', $blog->id) }}" class="blog-item-detail-link">記事詳細へ</a>
       </div>
       @endforeach

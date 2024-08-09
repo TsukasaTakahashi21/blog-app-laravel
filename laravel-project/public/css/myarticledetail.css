@@ -1,0 +1,71 @@
+/* マイページ記事詳細コンテナ */
+.my-article-detail-container {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
+  background: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* 記事タイトル */
+.my-article-detail-title {
+  margin-bottom: 20px;
+}
+
+.my-article-detail-title h3 {
+  margin: 0;
+  font-size: 1.8em;
+  color: #333;
+}
+
+/* 詳細コンテンツラッパー */
+.my-article-detail-content-wrapper {
+  margin-bottom: 20px;
+}
+
+.my-article-detail-date {
+  color: #888;
+  font-size: 0.9em;
+  margin: 10px 0;
+}
+
+.my-article-detail-content {
+  white-space: pre-wrap;
+  line-height: 1.6;
+  color: #333;
+}
+
+/* 詳細リンク */
+.my-article-detail-link {
+  margin-top: 20px;
+  display: flex; /
+  justify-content: flex-end; 
+}
+
+/* ボタン共通スタイル */
+.button, .my-article-delete-form button {
+  display: inline-block;
+  padding: 10px 20px;
+  border-radius: 5px;
+  text-decoration: none;
+  font-size: 1em;
+  transition: background-color 0.3s;
+  margin: 0 5px; 
+}
+
+/* 編集ボタンスタイル */
+.my-article-detail-link a.button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+}
+
+.my-article-detail-link a.button:hover {
+  background-color: #0056b3;
+}
+
+
+
+.my-article-delete-form button:hover {
+  background-color: #c82333;
+}

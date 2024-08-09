@@ -4,24 +4,28 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>記事詳細</title>
+  <link rel="stylesheet" href="{{ asset('css/common.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/detail.css') }}">
+
 </head>
 <body>
   @include('blog.header')
   <div class="detail-container">
-    <div class="detail-title">
+    <section class="detail-title">
       <h3>{{ $blog->title }}</h3>
-    </div>
+    </section>
     <div class="detail-content-wrapper">
         <p class="detail-date">{{ $blog->created_at }}</p>
         <p class="detail-content">{{ $blog->content}}</p>
         <div class="detail-link">
           <form action="{{ route('top') }}" method="get">
             @csrf 
-            <button type="submit" class="detail-button">一覧ページへ</button>
+            <button type="submit" class="button">一覧ページへ</button>
           </form>
         </div>
       </div>
-  </div>
+</div>
   <div class="comment-section">
     <h3 class="comment-title">この投稿にコメントしますか？</h3>
 

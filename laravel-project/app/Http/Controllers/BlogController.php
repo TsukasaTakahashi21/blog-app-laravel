@@ -28,32 +28,6 @@ use App\ValueObject\Comments;
 
 class BlogController extends Controller
 {
-    private CreateBlogInteractor $createBlogInteractor;
-    private EditBlogInteractor $editBlogInteractor;
-    private ListBlogsInteractor $listBlogsInteractor;
-    private ListBlogDetailInteractor $listBlogDetailInteractor;
-    private MyArticleDetailInteractor $myArticleDetailInteractor;
-    private DeleteBlogInteractor $deleteBlogInteractor;
-    private CreateCommentInteractor $createCommentInteractor;
-
-    public function __construct(
-        CreateBlogInteractor $createBlogInteractor,
-        EditBlogInteractor $editBlogInteractor,
-        ListBlogsInteractor $listBlogsInteractor,
-        ListBlogDetailInteractor $listBlogDetailInteractor,
-        MyArticleDetailInteractor $myArticleDetailInteractor,
-        DeleteBlogInteractor $deleteBlogInteractor,
-        CreateCommentInteractor $createCommentInteractor
-    ) {
-        $this->createBlogInteractor = $createBlogInteractor;
-        $this->editBlogInteractor = $editBlogInteractor;
-        $this->listBlogsInteractor = $listBlogsInteractor;
-        $this->listBlogDetailInteractor = $listBlogDetailInteractor;
-        $this->myArticleDetailInteractor = $myArticleDetailInteractor;
-        $this->deleteBlogInteractor = $deleteBlogInteractor;
-        $this->createCommentInteractor = $createCommentInteractor;
-    }
-
 
     // 絞り込み機能
     public function top(Request $request)
@@ -63,7 +37,8 @@ class BlogController extends Controller
             $request->query('sort')
         );
 
-        $blogs = $this->listBlogsInteractor->handle($input);
+        $interactor = new ListBlogsInteractor();
+        $blogs = $interactor->handle($input);
 
         return view ('blog.top', compact('blogs'));
     }
@@ -95,7 +70,8 @@ class BlogController extends Controller
         );
 
         try {
-            $this->createBlogInteractor->handle($input);
+            $interactor = new CreateBlogInteractor();
+            $interactor->handle($input);
             return redirect()->route('mypage');
         } catch (\Exception $e) {
             return redirect()->back()->withErrors([
@@ -113,7 +89,8 @@ class BlogController extends Controller
     public function showDetail($id)
     {
         $input = new ListBlogDetailInput($id);
-        $result = $this->listBlogDetailInteractor->handle($input);
+        $interactor = new ListBlogDetailInteractor();
+        $result = $interactor->handle($input);
 
         $blog = $result['blog'];
         $comments = $result['comments'];
@@ -139,7 +116,8 @@ class BlogController extends Controller
         );
 
         try {
-            $this->createCommentInteractor->handle($input);
+            $interactor = new CreateCommentInteractor();
+            $interactor->handle($input);
             return redirect()->route('detail', ['id' => $id]);
         } catch (\Exception $e) {
             return redirect()->back()->withErrors([
@@ -151,14 +129,23 @@ class BlogController extends Controller
     // マイページ詳細
     public function mypage()
     {
-        $blogs = Blog::all();
+        $userId = Auth::id();// ログインユーザーのIDを取得
+        $blogs = Blog::where('user_id', $userId)->get(); // ログインユーザーの作成した記事のみ取得
+
         return view('blog.mypage', compact('blogs'));
     }
 
     public function showMyarticleDetail($id)
     {
+        $blog = BLog::findOrFail($id);
+
+        if ($blog->user_id !== Auth::id()) {
+            return redirect()->route('mypage');
+        }
+
         $input = new MyArticleDetailInput($id);
-        $result = $this->myArticleDetailInteractor->handle($input);
+        $interactor = new MyArticleDetailInteractor();
+        $result = $interactor->handle($input);
 
         $blog =$result['blog'];
 
@@ -194,8 +181,8 @@ class BlogController extends Controller
         );
 
         try {
-            $this->editBlogInteractor->handle($input);
-            return redirect()->route('mypage');      
+            $interactor = new EditBlogInteractor();
+            $interactor->handle($input);      
         } catch (\Exception $e) {
             return redirect()->back()->withErrors([
                 'edit_blog_error' => $e->getMessage()
@@ -207,8 +194,8 @@ class BlogController extends Controller
     public function destroy($id)
     {
         $input = new DeleteBlogInput($id);
-        $this->deleteBlogInteractor->handle($input);
-
+        $interactor = new DeleteBlogInteractor();
+        $interactor->handle($input);
         return redirect()->route('mypage');
     }
 }
