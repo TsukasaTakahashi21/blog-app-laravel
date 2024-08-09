@@ -4,20 +4,23 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ログイン</title>
+  <link rel="stylesheet" href="{{ asset('css/common.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/user-login.css') }}">
 </head>
 <body>
   <div class="user">
     <div class="user-inner">
       <h1 class="title">ログイン</h1>
       <!-- エラーメッセージ -->
-      @if ($errors->has('login_error'))
-        <div class="error-messages">
-          <ul>
-            @foreach ($errors->get('login_error') as $error)
-              <li>{{ $error }}</li>
-            @endforeach
-          </ul>
-        </div>
+      @if ($errors->any())
+      <div class="error-message">
+        <ul>
+          @foreach($errors ->all() as $error)
+          <li>{{ $error }}</li>
+          @endforeach
+        </ul>
+      </div>
       @endif
 
       <!-- ログインフォーム -->

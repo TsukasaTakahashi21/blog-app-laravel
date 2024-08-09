@@ -1,0 +1,32 @@
+/* 編集ページ */
+.edit-container {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.edit-field {
+  margin-bottom: 20px;
+}
+
+.edit-input, .edit-textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1em;
+  box-sizing: border-box; 
+}
+
+.edit-textarea {
+  height: 200px; 
+  resize: vertical;
+}

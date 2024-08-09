@@ -1,0 +1,42 @@
+
+.header-container {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* ヘッダーのタイトル */
+.header-title h2 {
+  margin: 0;
+  font-size: 1.5em;
+}
+
+/* ナビゲーション */
+.nav {
+  display: flex;
+}
+
+.nav-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+}
+
+.nav-list li {
+  margin-right: 15px;
+}
+
+.navigation-link {
+  color: white;
+  text-decoration: none;
+  font-size: 1em;
+  transition: color 0.3s;
+}
+
+.navigation-link:hover {
+  color: #dcdcdc;
+}

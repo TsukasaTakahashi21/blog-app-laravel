@@ -1,0 +1,43 @@
+
+/* メインのレイアウト */
+.main {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
+  background: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* メインタイトル */
+.main-title {
+  text-align: center;
+}
+
+.main-title-text {
+  margin: 0;
+}
+
+/* フィルターセクション */
+.filter-section {
+  margin-bottom: 20px;
+}
+
+.search-form {
+  display: flex;
+  justify-content: space-between;
+}
+
+.search-input {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.sort-options {
+  margin-left: 10px;
+}
+
+.sort-options input {
+  margin-right: 5px;
+}

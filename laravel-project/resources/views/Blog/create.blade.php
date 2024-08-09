@@ -4,6 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
+  <link rel="stylesheet" href="{{ asset('css/common.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/create.css') }}">
 </head>
 <body>
   @include('blog.header')
@@ -18,7 +21,7 @@
       </ul>
     </div>
     @endif
-    
+  
     <form action="{{ route('store') }}" method="post" class="create-form">
       @csrf
       <div class="form-group">
@@ -30,7 +33,7 @@
         <textarea name="content" id="content" class="form-textarea">{{ old('content') }}</textarea>
       </div>
       <div class="button">
-        <button type="submit" class="submit-button">新規作成</button>
+        <button type="submit" class="form-button">新規作成</button>
       </div>
     </form>
   </div>

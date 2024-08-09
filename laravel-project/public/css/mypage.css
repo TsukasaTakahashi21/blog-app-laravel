@@ -1,0 +1,83 @@
+/* マイページコンテナ */
+.main {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
+  background: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* マイページタイトル */
+.main-title {
+  margin-bottom: 20px;
+}
+
+.main-title-text {
+  margin: 0;
+}
+
+/* 新規作成リンク */
+.create-new {
+  margin-bottom: 20px;
+}
+
+.create-new-link {
+  background-color: #007bff;
+  color: #fff;
+  padding: 10px 15px;
+  text-decoration: none;
+  border-radius: 5px;
+  display: inline-block;
+}
+
+.create-new-link:hover {
+  background-color: #0056b3;
+}
+
+/* ブログリスト */
+.blog-list {
+  margin: 20px auto;
+  max-width: 800px;
+}
+
+.blog-item {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.blog-item:hover {
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.blog-item-title {
+  font-size: 1.5em;
+  margin: 0 0 10px;
+}
+
+.blog-item-date {
+  color: #888;
+  font-size: 0.9em;
+  margin: 0 0 10px;
+}
+
+.blog-item-content {
+  margin: 0 0 10px;
+  color: #333;
+}
+
+.blog-item-detail-link {
+  color: #007bff;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.blog-item-detail-link:hover {
+  text-decoration: underline;
+}
+
