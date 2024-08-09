@@ -12,8 +12,8 @@ class CreateCommentInteractor
       Comment::create([
         'user_id' => $input->userId,
         'blog_id' => $input->blogId,
-        'commenter_name' => $input->commenterName,
-        'comments' => $input->comments,
+        'commenter_name' => $input->commenterName->getValue(),
+        'comments' => $input->comments->getValue(),
       ]);
     } catch (QueryException $e) {
         throw new \Exception('コメントの作成に失敗しました。');

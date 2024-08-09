@@ -20,6 +20,12 @@ use App\UseCase\Blog\DeleteBlogInteractor;
 use App\UseCase\Blog\CreateCommentInput;
 use App\UseCase\Blog\CreateCommentInteractor;
 
+use App\ValueObject\Title;
+use App\ValueObject\Content;
+use App\ValueObject\CommenterName;
+use App\ValueObject\Comments;
+
+
 class BlogController extends Controller
 {
     private CreateBlogInteractor $createBlogInteractor;
@@ -84,8 +90,8 @@ class BlogController extends Controller
         ]);
 
         $input = new CreateBlogInput(
-            $validated['title'],
-            $validated['content']
+            new Title($validated['title']),
+            new Content($validated['content'])
         );
 
         try {
@@ -128,8 +134,8 @@ class BlogController extends Controller
         $input = new CreateCommentInput(
             Auth::id(),
             $id,
-            $validated['commenter_name'],
-            $validated['comments'],
+            new CommenterName($validated['commenter_name']),
+            new Comments($validated['comments']),
         );
 
         try {
@@ -181,7 +187,11 @@ class BlogController extends Controller
             'content' => 'required|string',
         ]);
 
-        $input = new EditBlogInput($id, $validated['title'], $validated['content']);
+        $input = new EditBlogInput(
+            $id, 
+            new Title($validated['title']), 
+            new Content($validated['content'])
+        );
 
         try {
             $this->editBlogInteractor->handle($input);

@@ -1,14 +1,17 @@
 <?php
 namespace App\UseCase\Blog;
 
+use App\ValueObject\CommenterName;
+use App\ValueObject\Comments;
+
 class CreateCommentInput
 {
   public int $userId;
   public int $blogId;
-  public string $commenterName;
-  public string $comments;
+  public CommenterName $commenterName;
+  public Comments $comments;
 
-  public function __construct(int $userId, int $blogId, string $commenterName, string $comments)
+  public function __construct(int $userId, int $blogId, CommenterName $commenterName, Comments $comments)
   {
     $this->userId = $userId;
     $this->blogId = $blogId;

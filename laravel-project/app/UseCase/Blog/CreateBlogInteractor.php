@@ -4,6 +4,8 @@ namespace App\UseCase\Blog;
 use App\Models\blog;
 use App\UseCase\Blog\CreateBlogInput;
 use Illuminate\Database\QueryException;
+use App\ValueObject\Title;
+use App\ValueObject\Content;
 
 class CreateBlogInteractor 
 {
@@ -11,8 +13,8 @@ class CreateBlogInteractor
   {
     try {
       $blog = new Blog();
-      $blog->title = $input->getTitle();
-      $blog->content = $input->getContent();
+      $blog->title = $input->getTitle()->getValue();
+      $blog->content = $input->getContent()->getValue();
       $blog->save();
     } catch (QueryException $e) {
         throw new \Exception('ブログ作成に失敗しました。');
