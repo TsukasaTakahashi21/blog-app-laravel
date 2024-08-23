@@ -1,0 +1,132 @@
+@import url('{{ asset('css/common.css') }}');
+
+/* メインコンテナ */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* 記事詳細コンテナ */
+.detail-container {
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+  padding: 20px;
+  box-sizing: border-box; 
+}
+
+/* 記事タイトル */
+.detail-title h3 {
+  font-size: 2em;
+  margin: 0 0 10px;
+  color: #333;
+}
+
+/* 記事内容ラッパー */
+.detail-content-wrapper {
+  margin-bottom: 20px;
+}
+
+/* 記事日付 */
+.detail-date {
+  font-size: 1em;
+  color: #888;
+  margin-bottom: 10px;
+}
+
+/* 記事内容 */
+.detail-content {
+  font-size: 1.2em;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+/* リンクボタン */
+.detail-link {
+  text-align: center;
+}
+
+
+/* コメントセクション */
+.comment-section {
+  border-top: 1px solid #ddd;
+  padding-top: 20px;
+  margin-top: 20px;
+}
+
+.comment-title {
+  font-size: 1.5em;
+  margin-bottom: 20px;
+}
+
+
+/* コメントフォーム */
+.comment-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.comment-label {
+  font-size: 1em;
+}
+
+.comment-input,
+.comment-textarea {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 1em;
+  width: 100%; /* コンテナ幅に合わせて広がる */
+  box-sizing: border-box; /* ボックスサイズにパディングとボーダーを含める */
+}
+
+.comment-textarea {
+  height: 100px;
+}
+
+.comment-button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: #28a745;
+  color: white;
+  font-size: 1em;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.comment-button:hover {
+  background-color: #218838;
+  transform: scale(1.05);
+}
+
+/* コメント一覧 */
+.comment-list {
+  margin-top: 20px;
+}
+
+.comment-list-title {
+  font-size: 1.5em;
+  margin-bottom: 20px;
+}
+
+/* コメントアイテム */
+.comment-item {
+  border-bottom: 1px solid #ddd;
+  padding: 10px 0;
+}
+
+.comment-text {
+  font-size: 1em;
+  color: #333;
+  margin: 0 0 10px;
+}
+
+.comment-date,
+.comment-name {
+  font-size: 0.9em;
+  color: #888;
+}
+
