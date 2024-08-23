@@ -1,32 +1,59 @@
-/* 編集ページ */
-.edit-container {
-  max-width: 800px;
-  margin: 20px auto;
-  padding: 20px;
+@import url('{{ asset('css/common.css') }}');
+
+/* コンテナ全体のスタイル */
+.container {
+  max-width: 1200px;
+  margin: 30px auto 0; 
+  padding: 30px; 
   background-color: #fff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box; 
 }
 
+/* メインタイトルのスタイル */
+.main-title {
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.main-title-text {
+  font-size: 2em;
+  color: #333;
+}
+
+
+/* フォームのスタイル */
 .edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /
+}
+
+/* フィールドのスタイル */
+.edit-field {
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
-.edit-field {
-  margin-bottom: 20px;
+.edit-field label {
+  font-size: 1.1em;
+  color: #333;
 }
 
+/* 入力フィールドのスタイル */
 .edit-input, .edit-textarea {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  padding: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
   font-size: 1em;
+  width: 100%; 
   box-sizing: border-box; 
 }
 
+/* テキストエリアの追加スタイル */
 .edit-textarea {
-  height: 200px; 
+  min-height: 200px;
   resize: vertical;
 }

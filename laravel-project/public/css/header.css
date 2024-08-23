@@ -1,20 +1,25 @@
 
+.header-wrapper {
+  width: 100%;
+  background-color: #007bff;
+}
+
 .header-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px 30px; 
   background-color: #007bff;
   color: white;
-  padding: 10px 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-/* ヘッダーのタイトル */
 .header-title h2 {
   margin: 0;
   font-size: 1.5em;
 }
 
-/* ナビゲーション */
 .nav {
   display: flex;
 }
@@ -27,7 +32,7 @@
 }
 
 .nav-list li {
-  margin-right: 15px;
+  margin-right: 20px;
 }
 
 .navigation-link {

@@ -1,11 +1,23 @@
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 body {
   font-family: Arial, sans-serif;
   line-height: 1.6;
-  color: #333;
-  background-color: #f4f4f4;
-  margin: 0;
-  padding: 0;
-  height: 100vh; 
+  background-color: #f0f0f0;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
 }
 
 /* ヘッダー */
@@ -31,10 +43,12 @@ header h1 {
   text-decoration: none;
   font-size: 1em;
   transition: background-color 0.3s;
+  text-align: center;
 }
 
 .button:hover, .form-button:hover {
   background-color: #0056b3;
+  transform: scale(1.05);
 }
 
 /* エラーメッセージ */

@@ -5,12 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>編集</title>
   <link rel="stylesheet" href="{{ asset('css/common.css') }}">
-  <link rel="stylesheet" href="{{ asset('css/style.css') }}">
   <link rel="stylesheet" href="{{ asset('css/edit.css') }}">
 </head>
 <body>
   @include('blog.header')
-  <div class="edit-container">
+  <div class="container">
     @if ($errors->any())
     <div class="error-message">
       <ul>
@@ -20,6 +19,10 @@
       </ul>
     </div>
     @endif
+
+    <div class="main-title">
+      <h1 class="main-title-text">編集</h1>
+    </div>
 
     <form action="{{ route('update', $blog->id) }}" method="post" class="edit-form">
       @csrf

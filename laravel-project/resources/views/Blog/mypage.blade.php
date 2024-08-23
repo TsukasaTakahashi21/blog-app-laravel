@@ -5,12 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>マイページ</title>
   <link rel="stylesheet" href="{{ asset('css/common.css') }}">
-  <link rel="stylesheet" href="{{ asset('css/style.css') }}">
   <link rel="stylesheet" href="{{ asset('css/mypage.css') }}">
 </head>
 <body>
   @include('blog.header')
-  <div class="main">
+  <div class="container">
     <div class="main-title">
       <h1 class="main-title-text">マイページ</h1>
     </div>
