@@ -1,13 +1,11 @@
 @import url('{{ asset('css/common.css') }}');
 
 /* コンテナ全体のスタイル */
-.container {
+.edit-container {
   max-width: 1200px;
-  margin: 30px auto 0; 
-  padding: 30px; 
-  background-color: #fff;
+  margin: auto 0; 
+  padding: 20px; 
   border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   box-sizing: border-box; 
 }
 
