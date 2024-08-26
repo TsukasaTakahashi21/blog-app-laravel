@@ -28,5 +28,7 @@ Route::get('/myarticleDetail/{id}', [BlogController::class, 'showMyarticleDetail
 
 Route::delete('/destroy/{id}', [BlogController::class, 'destroy'])->name('destroy');
 
+Route::post('/blog/{id}', [BlogController::class, 'toggleStatus'])->name('toggleStatus');
+
 
 

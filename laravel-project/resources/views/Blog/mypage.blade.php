@@ -23,6 +23,13 @@
         <h2 class="blog-item-title">{{ $blog-> title }}</h2>
         <p class="blog-item-date">{{ $blog-> created_at }}</p>
         <p class="blog-item-content">{{ Str::limit($blog-> content, 15) }}</p>
+
+        <form action="{{ route('toggleStatus', $blog->id) }}" method="POST">
+          @csrf 
+          <button type = "submit" class="toggle-button">
+            {{ $blog->status == 1 ? '非公開にする' : '公開にする' }}
+          </button>
+        </form>
         <a href="{{ route('myarticleDetail', $blog->id) }}" class="blog-item-detail-link">記事詳細へ</a>
       </div>
       @endforeach
