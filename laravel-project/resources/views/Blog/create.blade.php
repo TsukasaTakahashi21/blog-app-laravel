@@ -31,9 +31,7 @@
         <label for="content">内容</label>
         <textarea name="content" id="content" class="form-textarea">{{ old('content') }}</textarea>
       </div>
-      <div class="button">
-        <button type="submit" class="form-button">新規作成</button>
-      </div>
+      <button type="submit" class="form-button">新規作成</button>
     </form>
   </div>
 </body>

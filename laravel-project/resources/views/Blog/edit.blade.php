@@ -9,7 +9,7 @@
 </head>
 <body>
   @include('blog.header')
-  <div class="container">
+  <div class="edit-container">
     @if ($errors->any())
     <div class="error-message">
       <ul>
