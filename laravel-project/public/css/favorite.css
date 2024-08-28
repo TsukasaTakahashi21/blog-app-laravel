@@ -1,0 +1,19 @@
+
+
+/* お気に入りボタン */
+.favorite-section {
+  margin-left: 20px; 
+}
+
+.favorite-button {
+  background: none;
+  border: none;
+  font-size: 1.5em;
+  cursor: pointer;
+  color: #007bff; 
+}
+
+.favorite-button:focus {
+  outline: none;
+}
+

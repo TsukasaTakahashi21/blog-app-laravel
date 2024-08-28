@@ -17,6 +17,7 @@
         <ul class="nav-list">
           <li><a href="{{ route('top') }}" class="navigation-link">ホーム</a></li>
           <li><a href="{{ route('mypage') }}" class="navigation-link">マイページ</a></li>
+          <li><a href="{{ route('favorites') }}" class="navigation-link">お気に入り</a></li>
           <li><a href="{{ route('logout') }}" class="navigation-link">ログアウト</a></li>
         </ul>
       </div>

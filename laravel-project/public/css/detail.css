@@ -1,12 +1,5 @@
 @import url('{{ asset('css/common.css') }}');
 
-/* メインコンテナ */
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
-}
-
 /* 記事詳細コンテナ */
 .detail-container {
   border: 1px solid #ddd;
@@ -17,6 +10,12 @@
 }
 
 /* 記事タイトル */
+.detail-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; 
+}
+
 .detail-title h3 {
   font-size: 2em;
   margin: 0 0 10px;
@@ -78,8 +77,8 @@
   border: 1px solid #ddd;
   border-radius: 5px;
   font-size: 1em;
-  width: 100%; /* コンテナ幅に合わせて広がる */
-  box-sizing: border-box; /* ボックスサイズにパディングとボーダーを含める */
+  width: 100%; 
+  box-sizing: border-box;
 }
 
 .comment-textarea {
@@ -128,4 +127,5 @@
   font-size: 0.9em;
   color: #888;
 }
+
 
