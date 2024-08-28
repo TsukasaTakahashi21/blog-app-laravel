@@ -40,6 +40,11 @@ class BlogController extends Controller
         $interactor = new ListBlogsInteractor();
         $blogs = $interactor->handle($input);
 
+        // 全ての投稿のうち、公開状態のものだけを表示
+        $blogs = $blogs->filter(function ($blog) {
+            return $blog->status == 1;
+        });
+
         return view ('blog.top', compact('blogs'));
     }
 
@@ -66,7 +71,8 @@ class BlogController extends Controller
 
         $input = new CreateBlogInput(
             new Title($validated['title']),
-            new Content($validated['content'])
+            new Content($validated['content']),
+            1 // デフォルトで公開状態に設定
         );
 
         try {
@@ -78,6 +84,16 @@ class BlogController extends Controller
                 'create_blog_error' => $e->getMessage()
             ])->withInput();
         }
+    }
+
+    public function toggleStatus($id)
+    {
+        $blog = Blog::findOrFail($id);
+
+        $blog->status = $blog->status == 0 ? 1 :0;
+        $blog->save();
+
+        return redirect()->route('mypage');
     }
 
     // ブログ詳細

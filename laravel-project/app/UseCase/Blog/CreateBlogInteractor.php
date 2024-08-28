@@ -16,6 +16,7 @@ class CreateBlogInteractor
       $blog->title = $input->getTitle()->getValue();
       $blog->content = $input->getContent()->getValue();
       $blog->user_id = session('user_id'); 
+      $blog->status = $input->getStatus();
       $blog->save();
     } catch (QueryException $e) {
         throw new \Exception('ブログ作成に失敗しました。');
