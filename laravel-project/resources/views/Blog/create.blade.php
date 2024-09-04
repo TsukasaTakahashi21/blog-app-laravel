@@ -24,9 +24,22 @@
     <form action="{{ route('store') }}" method="post" class="create-form">
       @csrf
       <div class="form-group">
+        <label for="category">カテゴリ</label>
+        <select name="category" id="category" class="form-input">
+          <option value="">カテゴリを選択してください</option>
+            @foreach($categories as $category)
+              <option value="{{ $category->id }}" {{ request('category') == $category->id ? 'selected' : '' }}>
+                {{ $category->name }}
+              </option>
+            @endforeach
+        </select>
+      </div>
+    
+      <div class="form-group">
         <label for="title">タイトル</label>
         <input type="text" id="title" name="title" class="form-input" value="{{ old('title') }}">
       </div>
+
       <div class="form-group">
         <label for="content">内容</label>
         <textarea name="content" id="content" class="form-textarea">{{ old('content') }}</textarea>

@@ -3,7 +3,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use App\Models\blog;
+use App\Models\Category; 
 use App\Models\Comment;
 use App\UseCase\Blog\CreateBlogInput;
 use App\UseCase\Blog\CreateBlogInteractor;
@@ -32,9 +34,14 @@ class BlogController extends Controller
     // 絞り込み機能
     public function top(Request $request)
     {
+        $keyword = $request->query('keyword');
+        $sort = $request->query('sort');
+        $categoryId = $request->query('category');
+
         $input = new ListBlogsInput(
-            $request->query('keyword'),
-            $request->query('sort')
+            $keyword,
+            $sort,
+            $categoryId 
         );
 
         $interactor = new ListBlogsInteractor();
@@ -45,7 +52,16 @@ class BlogController extends Controller
             return $blog->status == 1;
         });
 
-        return view ('blog.top', compact('blogs'));
+        // カテゴリで絞り込む
+        if ($categoryId) {
+            $blogs = $blogs->filter(function ($blog) use ($categoryId) {
+                return $blog->categories->contains('id', $categoryId);
+            });
+        }
+
+        $categories = Category::all();
+
+        return view ('blog.top', compact('blogs', 'categories'));
     }
 
     public function header()
@@ -56,12 +72,14 @@ class BlogController extends Controller
     // ブログ作成
     public function create()
     {
-        return view('blog.create');
+        $categories = Category::all();
+        return view('blog.create', ['categories' => $categories]);
     }
 
     public function store(Request $request)
     {
         $validated = $request->validate([
+            'category' => 'nullable|integer',
             'title' => 'required|max:255',
             'content' => 'required'
         ], [
@@ -72,12 +90,14 @@ class BlogController extends Controller
         $input = new CreateBlogInput(
             new Title($validated['title']),
             new Content($validated['content']),
+            $validated['category'] ?? null,
             1 // デフォルトで公開状態に設定
         );
 
         try {
             $interactor = new CreateBlogInteractor();
-            $interactor->handle($input);
+            $blog = $interactor->handle($input); 
+
             return redirect()->route('mypage');
         } catch (\Exception $e) {
             return redirect()->back()->withErrors([
