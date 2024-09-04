@@ -41,4 +41,9 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function favorites()
+    {
+        return $this->belongsToMany(Blog::class, 'favorite', 'user_id', 'blog_id')->withTimestamps();
+    }
 }

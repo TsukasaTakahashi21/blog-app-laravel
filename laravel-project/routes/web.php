@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\BlogController;
-
+use App\Http\Controllers\FavoriteController;
 
 // User
 Route::get('/', [UserController::class, 'signUp'])->name('signUp');
@@ -30,5 +30,6 @@ Route::delete('/destroy/{id}', [BlogController::class, 'destroy'])->name('destro
 
 Route::post('/blog/{id}', [BlogController::class, 'toggleStatus'])->name('toggleStatus');
 
-
-
+// Favorite
+Route::post('/blogs{blog}', [FavoriteController::class, 'toggle'])->name('toggleFavorite');
+Route::get('/favorites', [FavoriteController::class, 'index'])->name('favorites');

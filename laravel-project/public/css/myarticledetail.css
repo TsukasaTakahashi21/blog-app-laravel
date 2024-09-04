@@ -1,12 +1,5 @@
 @import url('{{ asset('css/common.css') }}');
 
-/* メインコンテナ */
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
-}
-
 /* 記事詳細 */
 .article-detail {
   border: 1px solid #ddd;
