@@ -224,7 +224,8 @@ class BlogController extends Controller
 
         try {
             $interactor = new EditBlogInteractor();
-            $interactor->handle($input);      
+            $interactor->handle($input);
+            return redirect()->route('top'); 
         } catch (\Exception $e) {
             return redirect()->back()->withErrors([
                 'edit_blog_error' => $e->getMessage()
