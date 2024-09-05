@@ -16,6 +16,7 @@ class EditBlogInteractor
       $blog = Blog::findOrFail($input->getId());
       $blog->title = $input->getTitle()->getValue();
       $blog->content = $input->getContent()->getValue();
+      $blog->category_id = $input->getCategoryId();
       $blog->save();
     }  catch(QueryException $e) {
       throw new \Exception('ブログの編集に失敗しました。');

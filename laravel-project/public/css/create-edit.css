@@ -1,19 +1,6 @@
 @import url('{{ asset('css/common.css') }}');
 
-.create-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
-  box-sizing: border-box;
-}
-
-.create-container h2 {
-  font-size: 2em;
-  margin-bottom: 20px;
-  text-align: center;
-}
-
-.create-form {
+.submit-form {
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -22,6 +9,7 @@
 .form-group {
   display: flex;
   flex-direction: column;
+  margin-bottom: 1em;
 }
 
 .form-group label {
@@ -37,6 +25,7 @@
 }
 
 .form-textarea {
+  font-size: 1.5em;
   height: 150px;
   resize: vertical;
 }

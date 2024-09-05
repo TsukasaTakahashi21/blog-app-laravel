@@ -1,15 +1,5 @@
 @import url('{{ asset('css/common.css') }}');
 
-.container-title {
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.container-title h1 {
-  font-size: 2em;
-  margin: 0;
-}
-
 /* 絞り込み機能 */
 .filter-section {
   margin-bottom: 20px;

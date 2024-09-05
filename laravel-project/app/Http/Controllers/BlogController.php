@@ -200,7 +200,11 @@ class BlogController extends Controller
     public function edit($id)
     {
         $blog = Blog::findOrFail($id);
-        return view('blog.edit', compact('blog'));
+        $blogCategoryId = DB::table('blog_category')
+        ->where('blog_id', $id)
+        ->value('category_id');
+        $categories = Category::all();
+        return view('blog.edit', compact('blog', 'categories', 'blogCategoryId'));
     }
 
     public function update(Request $request, $id)
@@ -208,12 +212,14 @@ class BlogController extends Controller
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'content' => 'required|string',
+            'category' => 'nullable|integer',
         ]);
 
         $input = new EditBlogInput(
             $id, 
             new Title($validated['title']), 
-            new Content($validated['content'])
+            new Content($validated['content']),
+            $validated['category'] ?? null
         );
 
         try {

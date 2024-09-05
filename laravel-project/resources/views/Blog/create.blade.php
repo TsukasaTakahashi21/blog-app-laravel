@@ -5,11 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
   <link rel="stylesheet" href="{{ asset('css/common.css') }}">
-  <link rel="stylesheet" href="{{ asset('css/create.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/create-edit.css') }}">
 </head>
 <body>
   @include('blog.header')
-  <div class="create-container">
+  <div class="container">
     <h2>新規記事</h2>
     @if ($errors->any())
     <div class="error-message">
@@ -21,7 +21,7 @@
     </div>
     @endif
   
-    <form action="{{ route('store') }}" method="post" class="create-form">
+    <form action="{{ route('store') }}" method="post" class="submit-form">
       @csrf
       <div class="form-group">
         <label for="category">カテゴリ</label>
