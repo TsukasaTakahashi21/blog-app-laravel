@@ -26,6 +26,13 @@ class ListBlogsInteractor
             $query->orderBy('created_at', 'desc');
         }
       }
-        return $query->get();
+      return $query->get();
+
+      // カテゴリでの絞り込み
+      if ($category = $input->getCategory()) {
+        $query->whereHas('categories', function ($query) use ($category) {
+            $query->where('category_id', $category);
+        });
+    }
   }
 }
