@@ -99,13 +99,13 @@ class BlogController extends Controller
         );
 
         try {
-            $blog = $this->createBlogInteractor->handle($input); 
+            $this->createBlogInteractor->handle($input); 
 
-            return redirect()->route('mypage');
+            return redirect()->route('mypage')->with('success', 'ブログが作成されました。');
         } catch (\Exception $e) {
             return redirect()->back()->withErrors([
                 'create_blog_error' => $e->getMessage()
-            ])->withInput();
+            ])->withInput()->with('error', 'ブログ作成に失敗しました。');
         }
     }
 
