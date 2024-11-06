@@ -1,6 +1,9 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreBlogRequest;
+use App\Http\Requests\StoreCommentRequest;
+use App\Http\Requests\UpdateBlogRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -27,9 +30,33 @@ use App\ValueObject\Content;
 use App\ValueObject\CommenterName;
 use App\ValueObject\Comments;
 
-
 class BlogController extends Controller
 {
+    private $createBlogInteractor;
+    private $editBlogInteractor;
+    private $listBlogsInteractor;
+    private $listBlogDetailInteractor;
+    private $myArticleDetailInteractor;
+    private $deleteBlogInteractor;
+    private $createCommentInteractor;
+    
+    public function __construct(
+        CreateBlogInteractor $createBlogInteractor,
+        EditBlogInteractor $editBlogInteractor,
+        ListBlogsInteractor $listBlogsInteractor,
+        ListBlogDetailInteractor $listBlogDetailInteractor,
+        MyArticleDetailInteractor $myArticleDetailInteractor,
+        DeleteBlogInteractor $deleteBlogInteractor,
+        CreateCommentInteractor $createCommentInteractor
+    ) {
+        $this->createBlogInteractor = $createBlogInteractor;
+        $this->editBlogInteractor = $editBlogInteractor;
+        $this->listBlogsInteractor = $listBlogsInteractor;
+        $this->listBlogDetailInteractor = $listBlogDetailInteractor;
+        $this->myArticleDetailInteractor = $myArticleDetailInteractor;
+        $this->deleteBlogInteractor = $deleteBlogInteractor;
+        $this->createCommentInteractor = $createCommentInteractor;
+    }
 
     // 絞り込み機能
     public function top(Request $request)
@@ -44,8 +71,7 @@ class BlogController extends Controller
             $categoryId 
         );
 
-        $interactor = new ListBlogsInteractor();
-        $blogs = $interactor->handle($input);
+        $blogs = $this->listBlogsInteractor->handle($input);
 
         // 全ての投稿のうち、公開状態のものだけを表示
         $blogs = $blogs->filter(function ($blog) {
@@ -76,27 +102,17 @@ class BlogController extends Controller
         return view('blog.create', ['categories' => $categories]);
     }
 
-    public function store(Request $request)
+    public function store(StoreBlogRequest $request)
     {
-        $validated = $request->validate([
-            'category' => 'nullable|integer',
-            'title' => 'required|max:255',
-            'content' => 'required'
-        ], [
-            'title.required' => 'タイトルを入力してください',
-            'content.required' => '内容を入力してください'
-        ]);
-
         $input = new CreateBlogInput(
-            new Title($validated['title']),
-            new Content($validated['content']),
+            new Title($request->title),
+            new Content($request->content),
             $validated['category'] ?? null,
             1 // デフォルトで公開状態に設定
         );
 
         try {
-            $interactor = new CreateBlogInteractor();
-            $blog = $interactor->handle($input); 
+            $blog = $this->createBlogInteractor->handle($input); 
 
             return redirect()->route('mypage');
         } catch (\Exception $e) {
@@ -125,8 +141,7 @@ class BlogController extends Controller
     public function showDetail($id)
     {
         $input = new ListBlogDetailInput($id);
-        $interactor = new ListBlogDetailInteractor();
-        $result = $interactor->handle($input);
+        $result = $this->listBlogDetailInteractor->handle($input);
 
         $blog = $result['blog'];
         $comments = $result['comments'];
@@ -134,26 +149,17 @@ class BlogController extends Controller
         return view('blog.detail', compact('blog', 'comments'));
     }
 
-    public function storeComment(Request $request, $id)
+    public function storeComment(StoreCommentRequest $request, $id)
     {
-        $validated = $request->validate([
-            'commenter_name' => 'required|string|max:20',
-            'comments' => 'required|string',
-        ], [
-            'commenter_name.required' => 'コメント名を入力してください',
-            'comments.required' => 'コメントを入力してください',
-        ]);
-
         $input = new CreateCommentInput(
             Auth::id(),
             $id,
-            new CommenterName($validated['commenter_name']),
-            new Comments($validated['comments']),
+            new CommenterName($request->commenter_name),
+            new Comments($request->comments),
         );
 
         try {
-            $interactor = new CreateCommentInteractor();
-            $interactor->handle($input);
+            $this->createCommentInteractor->handle($input);
             return redirect()->route('detail', ['id' => $id]);
         } catch (\Exception $e) {
             return redirect()->back()->withErrors([
@@ -180,8 +186,7 @@ class BlogController extends Controller
         }
 
         $input = new MyArticleDetailInput($id);
-        $interactor = new MyArticleDetailInteractor();
-        $result = $interactor->handle($input);
+        $result = $this->myArticleDetailInteractor->handle($input);
 
         $blog =$result['blog'];
 
@@ -207,24 +212,18 @@ class BlogController extends Controller
         return view('blog.edit', compact('blog', 'categories', 'blogCategoryId'));
     }
 
-    public function update(Request $request, $id)
+    public function update(UpdateBlogRequest $request, $id)
     {
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'content' => 'required|string',
-            'category' => 'nullable|integer',
-        ]);
 
         $input = new EditBlogInput(
             $id, 
-            new Title($validated['title']), 
-            new Content($validated['content']),
+            new Title($request->title), 
+            new Content($request->content),
             $validated['category'] ?? null
         );
 
         try {
-            $interactor = new EditBlogInteractor();
-            $interactor->handle($input);
+            $this->editBlogInteractor->handle($input);
             return redirect()->route('top'); 
         } catch (\Exception $e) {
             return redirect()->back()->withErrors([
@@ -234,11 +233,10 @@ class BlogController extends Controller
     }
 
     // ブログ削除
-    public function destroy($id)
+    public function destroy(int $id)
     {
         $input = new DeleteBlogInput($id);
-        $interactor = new DeleteBlogInteractor();
-        $interactor->handle($input);
+        $this->deleteBlogInteractor->handle($input);
         return redirect()->route('mypage');
     }
 }
