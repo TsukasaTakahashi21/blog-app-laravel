@@ -13,7 +13,7 @@ Route::post('/login', [UserController::class, 'login'])->name('login');
 Route::get('/logout', [BlogController::class, 'logout'])->name('logout');
 
 // blog
-Route::get('/top', [BlogController::class, 'top'])->name('top');
+Route::get('/top', [BlogController::class, 'filterBlogs'])->name('top');
 Route::get('/mypage', [BlogController::class, 'mypage'])->name('mypage');
 
 Route::get('/create', [BlogController::class, 'create'])->name('create');

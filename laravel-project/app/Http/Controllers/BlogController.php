@@ -59,7 +59,7 @@ class BlogController extends Controller
     }
 
     // 絞り込み機能
-    public function top(Request $request)
+    public function filterBlogs(Request $request)
     {
         $keyword = $request->query('keyword');
         $sort = $request->query('sort');
@@ -72,19 +72,6 @@ class BlogController extends Controller
         );
 
         $blogs = $this->listBlogsInteractor->handle($input);
-
-        // 全ての投稿のうち、公開状態のものだけを表示
-        $blogs = $blogs->filter(function ($blog) {
-            return $blog->status == 1;
-        });
-
-        // カテゴリで絞り込む
-        if ($categoryId) {
-            $blogs = $blogs->filter(function ($blog) use ($categoryId) {
-                return $blog->categories->contains('id', $categoryId);
-            });
-        }
-
         $categories = Category::all();
 
         return view ('blog.top', compact('blogs', 'categories'));
