@@ -6,10 +6,8 @@ use App\Http\Requests\StoreCommentRequest;
 use App\Http\Requests\UpdateBlogRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use App\Models\blog;
 use App\Models\Category; 
-use App\Models\Comment;
 use App\UseCase\Blog\CreateBlogInput;
 use App\UseCase\Blog\CreateBlogInteractor;
 use App\UseCase\Blog\EditBlogInput;
@@ -58,7 +56,6 @@ class BlogController extends Controller
         $this->createCommentInteractor = $createCommentInteractor;
     }
 
-    // 絞り込み機能
     public function filterBlogs(Request $request)
     {
         $keyword = $request->query('keyword');
@@ -77,16 +74,10 @@ class BlogController extends Controller
         return view ('blog.top', compact('blogs', 'categories'));
     }
 
-    public function header()
-    {
-        return view('blog.header');
-    }
-
-    // ブログ作成
     public function create()
     {
         $categories = Category::all();
-        return view('blog.create', ['categories' => $categories]);
+        return view('blog.create', compact('categories'));
     }
 
     public function store(StoreBlogRequest $request)
@@ -94,7 +85,7 @@ class BlogController extends Controller
         $input = new CreateBlogInput(
             new Title($request->title),
             new Content($request->content),
-            $validated['category'] ?? null,
+            $request['category'] ?? null,
             1 // デフォルトで公開状態に設定
         );
 
@@ -103,9 +94,7 @@ class BlogController extends Controller
 
             return redirect()->route('mypage')->with('success', 'ブログが作成されました。');
         } catch (\Exception $e) {
-            return redirect()->back()->withErrors([
-                'create_blog_error' => $e->getMessage()
-            ])->withInput()->with('error', 'ブログ作成に失敗しました。');
+            return $this->handleError($e);
         }
     }
 
@@ -119,21 +108,13 @@ class BlogController extends Controller
         return redirect()->route('mypage');
     }
 
-    // ブログ詳細
-    public function detail()
-    {
-        return view('blog.detail');
-    }
-
-    public function showDetail($id)
+    public function detail(int $id)
     {
         $input = new ListBlogDetailInput($id);
-        $result = $this->listBlogDetailInteractor->handle($input);
+        $blog = $this->listBlogDetailInteractor->handle($input);
 
-        $blog = $result['blog'];
-        $comments = $result['comments'];
-
-        return view('blog.detail', compact('blog', 'comments'));
+        return view('blog.detail',['blog' => $blog,
+        'comments' => $blog->comments, ]);
     }
 
     public function storeComment(StoreCommentRequest $request, $id)
@@ -147,35 +128,31 @@ class BlogController extends Controller
 
         try {
             $this->createCommentInteractor->handle($input);
-            return redirect()->route('detail', ['id' => $id]);
+            return redirect()->route('detail', ['id' => $id])->with('success', 'コメントが作成されました。');
         } catch (\Exception $e) {
-            return redirect()->back()->withErrors([
-                'create_comment_error' => $e->getMessage()
-            ])->withInput();
+            return $this->handleError($e);
         }
     }
 
     // マイページ詳細
-    public function mypage()
+    public function myPage()
     {
-        $userId = Auth::id();// ログインユーザーのIDを取得
-        $blogs = Blog::where('user_id', $userId)->get(); // ログインユーザーの作成した記事のみ取得
+        $userId = Auth::id();
+        $blogs = Blog::where('user_id', $userId)->get(); 
 
         return view('blog.mypage', compact('blogs'));
     }
 
-    public function showMyarticleDetail($id)
+    public function myArticleDetail(int $id)
     {
-        $blog = BLog::findOrFail($id);
+        $blog = Blog::findOrFail($id);
 
         if ($blog->user_id !== Auth::id()) {
             return redirect()->route('mypage');
         }
 
         $input = new MyArticleDetailInput($id);
-        $result = $this->myArticleDetailInteractor->handle($input);
-
-        $blog =$result['blog'];
+        $blog = $this->myArticleDetailInteractor->handle($input);
 
         return view('blog.myarticleDetail', compact('blog'));
     }
@@ -188,42 +165,47 @@ class BlogController extends Controller
         return redirect()->route('signUp');
     }
 
-    // ブログ編集
-    public function edit($id)
+    public function edit(int $id)
     {
         $blog = Blog::findOrFail($id);
-        $blogCategoryId = DB::table('blog_category')
-        ->where('blog_id', $id)
-        ->value('category_id');
+        $blogCategoryId = $blog->categories()->pluck('category_id')->first();
         $categories = Category::all();
         return view('blog.edit', compact('blog', 'categories', 'blogCategoryId'));
     }
 
-    public function update(UpdateBlogRequest $request, $id)
+    public function update(UpdateBlogRequest $request, int $id)
     {
-
         $input = new EditBlogInput(
             $id, 
             new Title($request->title), 
             new Content($request->content),
-            $validated['category'] ?? null
+            $request->input('category') ?? null
         );
 
         try {
             $this->editBlogInteractor->handle($input);
-            return redirect()->route('top'); 
+            return redirect()->route('top')->with('success', 'ブログが更新されました。'); 
         } catch (\Exception $e) {
-            return redirect()->back()->withErrors([
-                'edit_blog_error' => $e->getMessage()
-            ])->withInput();
+            return $this->handleError($e);
         }
     }
 
     // ブログ削除
     public function destroy(int $id)
     {
-        $input = new DeleteBlogInput($id);
-        $this->deleteBlogInteractor->handle($input);
-        return redirect()->route('mypage');
+        try {
+            $input = new DeleteBlogInput($id);
+            $this->deleteBlogInteractor->handle($input);
+            return redirect()->route('mypage')->with('success', 'ブログを削除しました。');
+        } catch  (\Exception $e) {
+            return $this->handleError($e);
+        }
+    }
+
+    private function handleError(\Exception $e)
+    {
+        return redirect()->back()->withErrors([
+            'error' => $e->getMessage()
+        ])->withInput();
     }
 }

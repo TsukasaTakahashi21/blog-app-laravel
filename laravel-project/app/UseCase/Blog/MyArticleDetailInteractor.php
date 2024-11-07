@@ -5,12 +5,8 @@ use App\Models\Blog;
 
 class MyArticleDetailInteractor
 {
-  public function handle(MyArticleDetailInput $input)
+  public function handle(MyArticleDetailInput $input): Blog
   {
-    $blog = Blog::findOrFail($input->getBlogId());
-
-    return [
-      'blog' => $blog,
-    ];
+    return Blog::findOrFail($input->getBlogId());
   }
 }

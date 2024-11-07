@@ -17,6 +17,18 @@
       <a href="{{ route('create') }}" class="create-new-link">新規作成</a>
     </div>
 
+    @if (session('success'))
+      <div class="alert alert-success">
+        {{ session('success') }}
+      </div>
+    @endif
+
+    @if ($errors->has('delete_blog_error'))
+      <div class="alert alert-danger">
+        {{ $errors->first('delete_blog_error') }}
+      </div>
+    @endif
+
     <div class="blog-list">
       @foreach($blogs as $blog)
       <div class="blog-item">
