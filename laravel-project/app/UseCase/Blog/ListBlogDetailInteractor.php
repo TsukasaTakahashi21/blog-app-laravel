@@ -8,12 +8,8 @@ class ListBlogDetailInteractor
 {
   public function handle(ListBlogDetailInput $input)
   {
-    $blog = Blog::findOrFail($input->getBlogId());
-    $comments = Comment::where('blog_id', $input->getBlogId())->get();
+    $blog = Blog::with('comments')->findOrFail($input->getBlogId());
 
-    return [
-      'blog' => $blog,
-      'comments' => $comments,
-    ];
+    return $blog;
   }
 }

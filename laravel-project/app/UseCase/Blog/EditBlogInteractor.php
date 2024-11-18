@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Log;
 
 class EditBlogInteractor
 {
-  public function handle(EditBlogInput $input)
+  public function handle(EditBlogInput $input): Blog
   {
     return DB::transaction(function() use ($input) {
       try {
