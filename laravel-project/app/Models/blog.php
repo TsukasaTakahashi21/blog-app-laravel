@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+
 class Blog extends Model
 {
     use HasFactory;
@@ -15,7 +16,6 @@ class Blog extends Model
         'contents',
         'user_id',
         'status'
-
     ];
 
     public function favoritedBy()
@@ -26,5 +26,10 @@ class Blog extends Model
     public function categories()
     {
         return $this->belongsToMany(Category::class, 'blog_category');
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
     }
 }
