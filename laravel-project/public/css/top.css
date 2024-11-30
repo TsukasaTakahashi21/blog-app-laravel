@@ -1,0 +1,40 @@
+@import url('{{ asset('css/common.css') }}');
+
+/* 絞り込み機能 */
+.filter-section {
+  margin-bottom: 20px;
+}
+
+.search-form {
+  display: flex;
+  flex-direction: row; 
+  align-items: center; 
+  gap: 10px; 
+}
+
+.search-input {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  flex: 1; 
+}
+
+.sort-options {
+  margin: 0;
+}
+
+.search-button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: #007bff;
+  color: white;
+  font-size: 1em;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.search-button:hover {
+  background-color: #0056b3;
+}
+

@@ -1,10 +1,13 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreBlogRequest;
+use App\Http\Requests\StoreCommentRequest;
+use App\Http\Requests\UpdateBlogRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\blog;
-use App\Models\Comment;
+use App\Models\Category; 
 use App\UseCase\Blog\CreateBlogInput;
 use App\UseCase\Blog\CreateBlogInteractor;
 use App\UseCase\Blog\EditBlogInput;
@@ -25,17 +28,16 @@ use App\ValueObject\Content;
 use App\ValueObject\CommenterName;
 use App\ValueObject\Comments;
 
-
 class BlogController extends Controller
 {
-    private CreateBlogInteractor $createBlogInteractor;
-    private EditBlogInteractor $editBlogInteractor;
-    private ListBlogsInteractor $listBlogsInteractor;
-    private ListBlogDetailInteractor $listBlogDetailInteractor;
-    private MyArticleDetailInteractor $myArticleDetailInteractor;
-    private DeleteBlogInteractor $deleteBlogInteractor;
-    private CreateCommentInteractor $createCommentInteractor;
-
+    private $createBlogInteractor;
+    private $editBlogInteractor;
+    private $listBlogsInteractor;
+    private $listBlogDetailInteractor;
+    private $myArticleDetailInteractor;
+    private $deleteBlogInteractor;
+    private $createCommentInteractor;
+    
     public function __construct(
         CreateBlogInteractor $createBlogInteractor,
         EditBlogInteractor $editBlogInteractor,
@@ -54,113 +56,103 @@ class BlogController extends Controller
         $this->createCommentInteractor = $createCommentInteractor;
     }
 
-
-    // 絞り込み機能
-    public function top(Request $request)
+    public function filterBlogs(Request $request)
     {
+        $keyword = $request->query('keyword');
+        $sort = $request->query('sort');
+        $categoryId = $request->query('category');
+
         $input = new ListBlogsInput(
-            $request->query('keyword'),
-            $request->query('sort')
+            $keyword,
+            $sort,
+            $categoryId 
         );
 
         $blogs = $this->listBlogsInteractor->handle($input);
+        $categories = Category::all();
 
-        return view ('blog.top', compact('blogs'));
+        return view ('blog.top', compact('blogs', 'categories'));
     }
 
-    public function header()
-    {
-        return view('blog.header');
-    }
-
-    // ブログ作成
     public function create()
     {
-        return view('blog.create');
+        $categories = Category::all();
+        return view('blog.create', compact('categories'));
     }
 
-    public function store(Request $request)
+    public function store(StoreBlogRequest $request)
     {
-        $validated = $request->validate([
-            'title' => 'required|max:255',
-            'content' => 'required'
-        ], [
-            'title.required' => 'タイトルを入力してください',
-            'content.required' => '内容を入力してください'
-        ]);
-
         $input = new CreateBlogInput(
-            new Title($validated['title']),
-            new Content($validated['content'])
+            new Title($request->title),
+            new Content($request->content),
+            $request['category'] ?? null,
+            1 // デフォルトで公開状態に設定
         );
 
         try {
-            $this->createBlogInteractor->handle($input);
-            return redirect()->route('mypage');
+            $this->createBlogInteractor->handle($input); 
+
+            return redirect()->route('mypage')->with('success', 'ブログが作成されました。');
         } catch (\Exception $e) {
-            return redirect()->back()->withErrors([
-                'create_blog_error' => $e->getMessage()
-            ])->withInput();
+            return $this->handleError($e);
         }
     }
 
-    // ブログ詳細
-    public function detail()
+    public function toggleStatus($id)
     {
-        return view('blog.detail');
+        $blog = Blog::findOrFail($id);
+
+        $blog->status = $blog->status == 0 ? 1 :0;
+        $blog->save();
+
+        return redirect()->route('mypage');
     }
 
-    public function showDetail($id)
+    public function detail(int $id)
     {
         $input = new ListBlogDetailInput($id);
-        $result = $this->listBlogDetailInteractor->handle($input);
+        $blog = $this->listBlogDetailInteractor->handle($input);
 
-        $blog = $result['blog'];
-        $comments = $result['comments'];
-
-        return view('blog.detail', compact('blog', 'comments'));
+        return view('blog.detail',['blog' => $blog,
+        'comments' => $blog->comments, ]);
     }
 
-    public function storeComment(Request $request, $id)
+    public function storeComment(StoreCommentRequest $request, $id)
     {
-        $validated = $request->validate([
-            'commenter_name' => 'required|string|max:20',
-            'comments' => 'required|string',
-        ], [
-            'commenter_name.required' => 'コメント名を入力してください',
-            'comments.required' => 'コメントを入力してください',
-        ]);
-
         $input = new CreateCommentInput(
             Auth::id(),
             $id,
-            new CommenterName($validated['commenter_name']),
-            new Comments($validated['comments']),
+            new CommenterName($request->commenter_name),
+            new Comments($request->comments),
         );
 
         try {
             $this->createCommentInteractor->handle($input);
-            return redirect()->route('detail', ['id' => $id]);
+            return redirect()->route('detail', ['id' => $id])->with('success', 'コメントが作成されました。');
         } catch (\Exception $e) {
-            return redirect()->back()->withErrors([
-                'create_comment_error' => $e->getMessage()
-            ])->withInput();
+            return $this->handleError($e);
         }
     }
 
     // マイページ詳細
-    public function mypage()
+    public function myPage()
     {
-        $blogs = Blog::all();
+        $userId = Auth::id();
+        $blogs = Blog::where('user_id', $userId)->get(); 
+
         return view('blog.mypage', compact('blogs'));
     }
 
-    public function showMyarticleDetail($id)
+    public function myArticleDetail(int $id)
     {
-        $input = new MyArticleDetailInput($id);
-        $result = $this->myArticleDetailInteractor->handle($input);
+        $blog = Blog::findOrFail($id);
 
-        $blog =$result['blog'];
+        if ($blog->user_id !== Auth::id()) {
+            return redirect()->route('mypage');
+        }
+
+        $input = new MyArticleDetailInput($id);
+        $blog = $this->myArticleDetailInteractor->handle($input);
 
         return view('blog.myarticleDetail', compact('blog'));
     }
@@ -173,42 +165,47 @@ class BlogController extends Controller
         return redirect()->route('signUp');
     }
 
-    // ブログ編集
-    public function edit($id)
+    public function edit(int $id)
     {
         $blog = Blog::findOrFail($id);
-        return view('blog.edit', compact('blog'));
+        $blogCategoryId = $blog->categories()->pluck('category_id')->first();
+        $categories = Category::all();
+        return view('blog.edit', compact('blog', 'categories', 'blogCategoryId'));
     }
 
-    public function update(Request $request, $id)
+    public function update(UpdateBlogRequest $request, int $id)
     {
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'content' => 'required|string',
-        ]);
-
         $input = new EditBlogInput(
             $id, 
-            new Title($validated['title']), 
-            new Content($validated['content'])
+            new Title($request->title), 
+            new Content($request->content),
+            $request->input('category') ?? null
         );
 
         try {
             $this->editBlogInteractor->handle($input);
-            return redirect()->route('mypage');      
+            return redirect()->route('top')->with('success', 'ブログが更新されました。'); 
         } catch (\Exception $e) {
-            return redirect()->back()->withErrors([
-                'edit_blog_error' => $e->getMessage()
-            ])->withInput();
+            return $this->handleError($e);
         }
     }
 
     // ブログ削除
-    public function destroy($id)
+    public function destroy(int $id)
     {
-        $input = new DeleteBlogInput($id);
-        $this->deleteBlogInteractor->handle($input);
+        try {
+            $input = new DeleteBlogInput($id);
+            $this->deleteBlogInteractor->handle($input);
+            return redirect()->route('mypage')->with('success', 'ブログを削除しました。');
+        } catch  (\Exception $e) {
+            return $this->handleError($e);
+        }
+    }
 
-        return redirect()->route('mypage');
+    private function handleError(\Exception $e)
+    {
+        return redirect()->back()->withErrors([
+            'error' => $e->getMessage()
+        ])->withInput();
     }
 }

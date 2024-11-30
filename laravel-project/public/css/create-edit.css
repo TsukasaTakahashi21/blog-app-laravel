@@ -1,0 +1,34 @@
+@import url('{{ asset('css/common.css') }}');
+
+.submit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1em;
+}
+
+.form-group label {
+  font-size: 1.1em;
+  margin-bottom: 5px;
+}
+
+.form-input, .form-textarea {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1em;
+}
+
+.form-textarea {
+  font-size: 1em;
+  height: 150px;
+  resize: vertical;
+}
+
+
+
